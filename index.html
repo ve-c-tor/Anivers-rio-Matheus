@@ -83,8 +83,8 @@ h1 {
 
 .card {
   width: 100%;
-  max-width: 320px;   /* limite no PC */
-  aspect-ratio: 3 / 4; /* mantém proporção */
+  max-width: 320px;
+  aspect-ratio: 3 / 4;
   border-radius: 20px;
   overflow: hidden;
   background: rgba(255,255,255,0.1);
@@ -175,7 +175,7 @@ footer {
 /* Responsivo */
 @media (max-width: 600px) {
   .card {
-    max-width: 95%;  /* ocupa quase toda a tela no celular */
+    max-width: 95%;
     aspect-ratio: 3/4;
   }
 }
@@ -237,20 +237,23 @@ function createConfetti() {
   setTimeout(() => c.remove(), 4000);
 }
 
-// Ação do botão
+// Ação do botão (primeiro clique já toca)
 btn.addEventListener("click", () => {
   if (!player) return;
-  const state = player.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) {
-    player.pauseVideo();
-    btn.textContent = "🎵 Tocar";
-    clearInterval(confettiInterval);
-    cards.forEach(img => img.classList.remove("flash"));
-  } else {
+
+  if (!confettiInterval) {
+    // toca música e ativa efeitos
     player.playVideo();
     btn.textContent = "⏸️ Pausar";
     confettiInterval = setInterval(createConfetti, 150);
     cards.forEach(img => img.classList.add("flash"));
+  } else {
+    // pausa música e para efeitos
+    player.pauseVideo();
+    btn.textContent = "🎵 Tocar";
+    clearInterval(confettiInterval);
+    confettiInterval = null;
+    cards.forEach(img => img.classList.remove("flash"));
   }
 });
 </script>
